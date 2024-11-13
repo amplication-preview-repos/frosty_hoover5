@@ -1,0 +1,52 @@
+datasource db {
+  provider = "sqlserver"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Cliente {
+  createdAt DateTime  @default(now())
+  direccion String?
+  email     String?
+  facturas  Factura[]
+  id        String    @id @default(cuid())
+  nombre    String?
+  telefono  String?
+  updatedAt DateTime  @updatedAt
+}
+
+model Factura {
+  cliente       Cliente?  @relation(fields: [clienteId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clienteId     String?
+  createdAt     DateTime  @default(now())
+  fechaEmision  DateTime?
+  id            String    @id @default(cuid())
+  numeroFactura String?
+  total         Float?
+  updatedAt     DateTime  @updatedAt
+}
+
+model Producto {
+  createdAt      DateTime    @default(now())
+  descripcion    String?
+  id             String      @id @default(cuid())
+  nombreProducto String?
+  precioUnitario Float?
+  proveedors     Proveedor[]
+  stock          Int?
+  updatedAt      DateTime    @updatedAt
+}
+
+model Proveedor {
+  contacto        String?
+  createdAt       DateTime  @default(now())
+  email           String?
+  id              String    @id @default(cuid())
+  nombreProveedor String?
+  producto        Producto? @relation(fields: [productoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  productoId      String?
+  updatedAt       DateTime  @updatedAt
+}
